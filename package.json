@@ -50,7 +50,6 @@
     "tag": "v1.1",
     "main": "lib/index.js",
     "scripts": {
-        "pretest": "npm install",
         "test": "vows",
         "prepublish": "npm test"
     }
