@@ -1,6 +1,7 @@
 var unexpected = require('unexpected'),
     AssetGraph = require('../lib'),
     passError = require('passerror'),
+    URL = require('url'),
     Path = require('path');
 
 describe('AssetGraph#populate()', function () {
@@ -16,10 +17,10 @@ describe('AssetGraph#populate()', function () {
         }
         urls = urls.map(function (url) {
             return URL.resolve(this.obj.root, url);
-        });
+        }, this);
         urls.forEach(function (url) {
             expect(this.obj.findAssets({url: url}).length, 'to equal', 1);
-        });
+        }, this);
     });
 
     expect.addAssertion('to contain (relation|relations)', function (queryObj, number) {
@@ -35,7 +36,7 @@ describe('AssetGraph#populate()', function () {
             .browserPopulate()
             .run(passError(done, function (assetGraph) {
                 expect(assetGraph, 'to contain assets', {type: 'JavaScript'}, 6);
-                expect(assetGraph, 'to contain urls', ['/some/place/there.js', '/bar/quux/foo.js'])
+                expect(assetGraph, 'to contain urls', ['some/place/there.js', 'bar/quux/baz.js']);
                 done();
             }));
     });
