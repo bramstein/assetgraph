@@ -47,4 +47,18 @@ describe('AssetGraph#populate()', function () {
                 done();
             }));
     });
+
+    it('should bail out when conflicting configurations resolve a module name to different urls', function (done) {
+        new AssetGraph({root: Path.resolve(__dirname, 'browserPopulate', 'multipleInitialAssetsWithConflictingRequireJsConfigs')})
+            .on('error', done)
+            .on('warn', console.warn)
+            .registerRequireJsConfig()
+            .loadAssets('index*.html')
+            .browserPopulate()
+            .run(function (err, assetGraph) {
+                expect(err, 'to be an', Error);
+                expect(err.message, 'to equal', 'foo');
+                done();
+            });
+    });
 });
