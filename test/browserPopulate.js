@@ -2,10 +2,17 @@ var unexpected = require('unexpected'),
     AssetGraph = require('../lib'),
     passError = require('passerror'),
     URL = require('url'),
+    urlTools = require('urltools'),
     Path = require('path');
 
 describe('AssetGraph#populate()', function () {
     var expect = unexpected.clone();
+
+    AssetGraph.prototype.inspect = function () {
+        return ['AssetGraph'].concat(this.findAssets({isInline: false}).map(function (asset) {
+            return '  ' + (asset.isLoaded ? ' ' : '!') + ' ' + urlTools.buildRelativeUrl(this.root, asset.url);
+        }, this)).join('\n  ');
+    };
 
     expect.addAssertion('to contain (asset|assets)', function (expect, subject, queryObj, number) {
         expect(subject.findAssets(queryObj).length, 'to equal', typeof number === 'number' ? number : 1);
