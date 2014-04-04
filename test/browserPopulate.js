@@ -7,11 +7,11 @@ var unexpected = require('unexpected'),
 describe('AssetGraph#populate()', function () {
     var expect = unexpected.clone();
 
-    expect.addAssertion('to contain (asset|assets)', function (queryObj, number) {
-        expect(this.obj.findAssets(queryObj).length, 'to equal', typeof number === 'number' ? number : 1);
+    expect.addAssertion('to contain (asset|assets)', function (expect, subject, queryObj, number) {
+        expect(subject.findAssets(queryObj).length, 'to equal', typeof number === 'number' ? number : 1);
     });
 
-    expect.addAssertion('to contain (url|urls)', function (urls) {
+    expect.addAssertion('to contain (url|urls)', function (expect, subject, urls) {
         if (!Array.isArray(urls)) {
             urls = [urls];
         }
@@ -19,12 +19,12 @@ describe('AssetGraph#populate()', function () {
             return URL.resolve(this.obj.root, url);
         }, this);
         urls.forEach(function (url) {
-            expect(this.obj.findAssets({url: url}).length, 'to equal', 1);
-        }, this);
+            expect(subject.findAssets({url: url}).length, 'to equal', 1);
+        });
     });
 
-    expect.addAssertion('to contain (relation|relations)', function (queryObj, number) {
-        expect(this.obj.findRelations(queryObj).length, 'to equal', number);
+    expect.addAssertion('to contain (relation|relations)', function (expect, subject, queryObj, number) {
+        expect(subject.findRelations(queryObj).length, 'to equal', number);
     });
 
     it('should populate a graph with require.js correctly', function (done) {
