@@ -51,13 +51,15 @@ describe('AssetGraph#populate()', function () {
     it('should bail out when conflicting configurations resolve a module name to different urls', function (done) {
         new AssetGraph({root: Path.resolve(__dirname, 'browserPopulate', 'multipleInitialAssetsWithConflictingRequireJsConfigs')})
             .on('error', done)
-            .on('warn', console.warn)
+            .on('warn', function (err) {
+                console.warn(err.stack);
+            })
             .registerRequireJsConfig()
             .loadAssets('index*.html')
             .browserPopulate()
             .run(function (err, assetGraph) {
                 expect(err, 'to be an', Error);
-                expect(err.message, 'to equal', 'foo');
+                expect(err.message, 'to equal', 'browserPopulate transform: The module name foo resolves to different urls in different contexts: ./bar/quux ./blah/quux');
                 done();
             });
     });
